@@ -1,3 +1,3 @@
 # sirius_bringup
 
-## launch SLAM(Cartographer)
+## How to launch SLAM(Cartographer)?
