@@ -18,7 +18,13 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+ament_auto_add_executable(static_tf2_broadcaster src/static_tf2_broadcaster.cpp)
+
 install(DIRECTORY launch
+  DESTINATION share/sirius_bringup
+)
+
+install(DIRECTORY config
   DESTINATION share/sirius_bringup
 )
 
