@@ -16,9 +16,13 @@ endif()
 
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
+find_package(yaml-cpp REQUIRED)
 ament_auto_find_build_dependencies()
 
+ament_auto_add_library(sirius_navigation SHARED yaml-cpp)
+
 ament_auto_add_executable(static_tf2_broadcaster src/static_tf2_broadcaster.cpp)
+ament_auto_add_executable(get_point src/get_point.cpp)
 
 install(DIRECTORY launch
   DESTINATION share/sirius_bringup
