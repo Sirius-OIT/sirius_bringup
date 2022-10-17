@@ -12,7 +12,7 @@ def generate_launch_description():
     )
 
     config_pkg = get_package_share_directory('sirius_bringup')
-    config_path = os.path.join(config_pkg, 'config', 'laser_frame_config.yaml')
+    config_path = os.path.join(config_pkg, 'config', laser_frame_config_arg)
     
     kobuki_node_pkg = get_package_share_directory('kobuki_node')
     kobuki_node_path = os.path.join(kobuki_node_pkg, 'launch')
