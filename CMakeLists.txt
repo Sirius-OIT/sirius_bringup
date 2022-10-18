@@ -22,12 +22,7 @@ find_package(Boost REQUIRED system COMPONENTS)
 ament_auto_find_build_dependencies()
 
 ament_auto_add_executable(static_tf2_broadcaster src/static_tf2_broadcaster.cpp)
-ament_auto_add_executable(get_point src/get_point.cpp)
-
-include_directories(${Boost_INCLUDE_DIRS})
-
-ament_target_dependencies(get_point yaml-cpp)
-target_link_libraries(get_point ${Boot_LIBRARIES})
+ament_auto_add_executable(get_point src/get_point.cpp ${Boost_INCLUDE_DIRS}) 
 
 install(DIRECTORY launch
   DESTINATION share/sirius_bringup
