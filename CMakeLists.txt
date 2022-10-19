@@ -18,11 +18,14 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(Boost REQUIRED system COMPONENTS)
+find_package(yaml-cpp REQUIRED)
 
 ament_auto_find_build_dependencies()
 
 ament_auto_add_executable(static_tf2_broadcaster src/static_tf2_broadcaster.cpp)
-ament_auto_add_executable(get_point src/get_point.cpp ${Boost_INCLUDE_DIRS}) 
+ament_auto_add_executable(get_point src/get_point.cpp)
+
+ament_target_dependencies(get_point yaml-cpp)
 
 install(DIRECTORY launch
   DESTINATION share/sirius_bringup
