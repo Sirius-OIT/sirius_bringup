@@ -11,9 +11,9 @@ def generate_launch_description():
         'tf2_config', default_value='laser_frame_config.yaml'
     )
 
-    get_point_flg_arg = DeclareLaunchArgument(
-        'get_point_flg', default_value=False
-    )
+    # get_point_flg_arg = DeclareLaunchArgument(
+    #     'get_point_flg', default_value=False
+    # )
 
     config_pkg = get_package_share_directory('sirius_bringup')
     config_path = os.path.join(config_pkg, 'config', laser_frame_config_arg)

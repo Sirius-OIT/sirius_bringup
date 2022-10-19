@@ -18,7 +18,6 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(Boost REQUIRED system COMPONENTS)
-find_package(yaml-cpp REQUIRED)
 
 ament_auto_find_build_dependencies()
 

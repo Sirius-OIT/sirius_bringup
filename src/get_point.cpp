@@ -6,6 +6,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "geometry_msgs/msg/point.hpp"
+#include "yaml-cpp/yaml.h"
 
 class GetPoint : public rclcpp::Node
 {
@@ -29,46 +30,60 @@ class GetPoint : public rclcpp::Node
             yaml_file_.close();
         }
 
+        struct Geometry_msgs
+        {
+            double x_;
+            double y_;
+            double z_;
+            double x_qua_;
+            double y_qua_;
+            double z_qua_;
+            double w_qua_;
+        };
+
     private:
         void callback(const nav_msgs::msg::Odometry::SharedPtr data)
         {
-            boost::circular_buffer<int> buf(1);
+            
+            // boost::circular_buffer<geometry_msgs::msg::Pose> buf(1);
+            boost::circular_buffer<Geometry_msgs> buf(1);
             if(flg == true){
-                buf.push_front(2);
+                geometry_msgs.x_ = data->pose.pose.position.x;
+                geometry_msgs.y_ = data->pose.pose.position.y;
+                geometry_msgs.z_ = data->pose.pose.position.z;
+                geometry_msgs.x_qua_ = data->pose.pose.orientation.x;
+                geometry_msgs.y_qua_ = data->pose.pose.orientation.y;
+                geometry_msgs.z_qua_ = data->pose.pose.orientation.z;
+                geometry_msgs.w_qua_ = data->pose.pose.orientation.w;
+                buf.push_front(geometry_msgs);
                 flg = false;
             }
-            std::cout << data->pose.pose.position.x << std::endl;
-            // distance_ = get_disctance(data, buf[0]);
-            // if(distance_ > 5.0){
-            //     flg = true;
-            //     yaml_file_ << "  ";
-            //     yaml_file_ << "- [ ";
-            //     yaml_file_ << point_.x << ", ";
-            //     yaml_file_ << point_.y << ", ";
-            //     yaml_file_ << point_.z << ", ";
-            //     yaml_file_ << qua_.x << ", ";
-            //     yaml_file_ << qua_.y << ", ";
-            //     yaml_file_ << qua_.z << ", ";
-            //     yaml_file_ << qua_.w;
-            //     yaml_file_ << " ]";
-            //     yaml_file_ << std::endl;
-            // }
+            distance_ = this->get_distance(geometry_msgs, buf[0]);
+            if(distance_ > 5.0){
+                flg = true;
+                yaml_file_ << "  ";
+                yaml_file_ << "- [ ";
+                yaml_file_ << data->pose.pose.position.x << ", ";
+                yaml_file_ << data->pose.pose.position.y << ", ";
+                yaml_file_ << data->pose.pose.position.z << ", ";
+                yaml_file_ << data->pose.pose.orientation.x << ", ";
+                yaml_file_ << data->pose.pose.orientation.y << ", ";
+                yaml_file_ << data->pose.pose.orientation.z << ", ";
+                yaml_file_ << data->pose.pose.orientation.w;
+                yaml_file_ << " ]";
+                yaml_file_ << std::endl;
+            }
         }
 
-        double get_disctance(const nav_msgs::msg::Odometry::SharedPtr data1, const nav_msgs::msg::Odometry::SharedPtr data2)
+        double get_distance(Geometry_msgs data1, Geometry_msgs data2)
         {
-            double x1_ = data1->pose.pose.position.x;
-            double x2_ = data2->pose.pose.position.x;
-            double y1_ = data1->pose.pose.position.y;
-            double y2_ = data2->pose.pose.position.y;
+            double x1_ = data1.x_;
+            double x2_ = data2.x_;
+            double y1_ = data1.y_;
+            double y2_ = data2.y_;
 
             return std::hypot((x1_ - x2_), (y1_ - y2_));
         }
-
-        double x1_;
-        double x2_;
-        double y1_;
-        double y2_;
         
         int count_;
         double distance_;
@@ -76,8 +91,11 @@ class GetPoint : public rclcpp::Node
         std::ofstream yaml_file_;
 
         bool flg=true;
-        // boost::circular_buffer<nav_msgs::msg::Odometry::SharedPtr> buf(1);   
+        // boost::circular_buffer<geometry_msgs::msg::Pose> buf(1);   
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subscription_;
+
+        Geometry_msgs geometry_msgs;
+        
 };
 
 int main(int argc, char * argv[])
